@@ -71,13 +71,12 @@ function write_parameters(component){
 }
 
 function write_methods(component){
-  var text = "**Methods**\n\n"
-  var methods_headers = ['name', 'type', 'description']
-
   if(component.methods.length === 0){
     return ''
   }
 
+  var text = "**Methods**\n\n"
+  var methods_headers = ['name', 'type', 'description']
   for(i in component.methods)
   {
     method = component.methods[i]
@@ -94,15 +93,45 @@ function write_methods(component){
   return text
 }
 
+function write_slots(component){
+  if (Object.keys(component.slots) == 0) return ""
+  var text = "**Slots**\n\n"
+  var content = []
+  var slot_header = ['name', 'description']
+  for(slot in component.slots){
+    var description = ""
+    if(component.slots[slot].hasOwnProperty("description"))
+      description = component.slots[slot]['description']
+    content.push([slot, description])
+  }
+  text += create_rst_table(slot_header,content)
+  return text
+}
+
+function write_events(component){
+  if (Object.keys(component.events) == 0) return ""
+  var text = "**Events**\n\n"
+  var content = []
+  var event_header = ['name', 'type', 'description']
+  for(name in component.events){
+    var event_object = component.events[name]
+    content.push([name, event_object['type']['names'].join('|'), event_object['description']])
+  }
+  text += create_rst_table(event_header,content)
+  return text
+}
+
 function rst_content(component, filename){
   var rst_text = ""
   rst_text += write_header(component, filename)
   rst_text += write_parameters(component)
   rst_text += write_methods(component)
+  rst_text += write_slots(component)
+  rst_text += write_events(component)
   return rst_text
 }
 
-var pattern = "../../src/components/kytos/**/**/**.vue"
+var pattern = "../../src/components/kytos/**/**/Dropdown.vue"
 var options = null
 
 glob(pattern, options, function (er, files) {
