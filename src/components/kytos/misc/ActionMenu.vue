@@ -21,7 +21,6 @@
 <script>
 import KytosBase from '../base/KytosBase'
 import KytosBaseWithIcon from '../base/KytosBaseWithIcon'
-import listSwitches from "../../../kytos/listSwitches.vue"
 
 /**
  * Accordion item that can be switched between hiding and showing content
@@ -101,7 +100,11 @@ export default {
     },
     actionItems() {
        var self=this;
-       return this.items.filter(function(cust){return cust.name.toLowerCase().indexOf(self.search.toLowerCase())>=0;});
+       return this.items.filter(function(cust){
+         if(cust.name!== undefined){
+           return cust.name.toLowerCase().indexOf(self.search.toLowerCase())>=0;
+         }
+       });
     }
   },
   updated () {
